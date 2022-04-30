@@ -63,5 +63,4 @@ modifyYaml(newLabel) {
 
   final strYaml = toYamlString(modifiable);
   File("pubspec.yaml").writeAsStringSync(strYaml);
-  print(strYaml);
 }
