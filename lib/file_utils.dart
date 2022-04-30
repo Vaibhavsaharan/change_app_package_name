@@ -48,4 +48,5 @@ Future<void> changeAndroidAppName(
     return;
   }
   contents = contents.replaceAll(oldLabel, newLabel);
+  await writeFileFromString(androidManifestPath, contents);
 }
