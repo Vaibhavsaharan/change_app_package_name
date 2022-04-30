@@ -42,6 +42,7 @@ class AndroidRenameSteps {
     oldLabel = label;
 
     print("Old Package Name: $oldPackageName");
+    print("Old app label $oldLabel");
 
     print('Updating build.gradle File');
     await _replace(PATH_BUILD_GRADLE);
