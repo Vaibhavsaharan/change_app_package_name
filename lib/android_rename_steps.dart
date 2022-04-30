@@ -42,27 +42,33 @@ class AndroidRenameSteps {
     print('Updating Profile Manifest file');
     await _replace(PATH_MANIFEST_PROFILE);
 
-    await updateMainActivity();
-    await updateApplication();
+    await updateMainActivityAndApplication();
   }
 
-  Future<void> updateMainActivity() async {
+  Future<void> updateMainActivityAndApplication() async {
     String oldPackagePath = oldPackageName!.replaceAll('.', '/');
-    String javaPath = PATH_ACTIVITY + 'java/$oldPackagePath/MainActivity.java';
-    String kotlinPath = PATH_ACTIVITY + 'kotlin/$oldPackagePath/MainActivity.kt';
+    String javaPathMainActivity = PATH_ACTIVITY + 'java/$oldPackagePath/MainActivity.java';
+    String kotlinPathMainActivity = PATH_ACTIVITY + 'kotlin/$oldPackagePath/MainActivity.kt';
+    String javaPathApplication = PATH_ACTIVITY + 'java/$oldPackagePath/MainActivity.java';
+    String kotlinPathApplication = PATH_ACTIVITY + 'kotlin/$oldPackagePath/MainActivity.kt';
 
     String newPackagePath = newPackageName.replaceAll('.', '/');
-    String newJavaPath = PATH_ACTIVITY + 'java/$newPackagePath/MainActivity.java';
-    String newKotlinPath = PATH_ACTIVITY + 'kotlin/$newPackagePath/MainActivity.kt';
+    String newJavaPathMainActivity = PATH_ACTIVITY + 'java/$newPackagePath/MainActivity.java';
+    String newKotlinPathMainActivity = PATH_ACTIVITY + 'kotlin/$newPackagePath/MainActivity.kt';
+    String newJavaPathApplication = PATH_ACTIVITY + 'java/$newPackagePath/MainActivity.java';
+    String newKotlinPathApplication = PATH_ACTIVITY + 'kotlin/$newPackagePath/MainActivity.kt';
 
     if (await File(javaPath).exists()) {
       print('Project is using Java');
       print('Updating MainActivity.java');
-      await _replace(javaPath);
+      print('Updating Applicatio.java');
+      await _replace(javaPathMainActivity);
+      await _replace(javaPathApplication);
 
       print('Creating New Directory Structure');
       await Directory(PATH_ACTIVITY + 'java/$newPackagePath').create(recursive: true);
-      await File(javaPath).rename(newJavaPath);
+      await File(javaPathMainActivity).rename(newJavaPathMainActivity);
+      await File(javaPathApplication).rename(newJavaPathApplication);
 
       print('Deleting old directories');
       await deleteOldDirectories('java', oldPackageName!, PATH_ACTIVITY);
@@ -82,41 +88,6 @@ class AndroidRenameSteps {
     }
   }
 
-  Future<void> updateApplication() async {
-    String oldPackagePath = oldPackageName!.replaceAll('.', '/');
-    String javaPath = PATH_ACTIVITY + 'java/$oldPackagePath/Application.java';
-    String kotlinPath = PATH_ACTIVITY + 'kotlin/$oldPackagePath/Application.kt';
-
-    String newPackagePath = newPackageName.replaceAll('.', '/');
-    String newJavaPath = PATH_ACTIVITY + 'java/$newPackagePath/Application.java';
-    String newKotlinPath = PATH_ACTIVITY + 'kotlin/$newPackagePath/Application.kt';
-
-    if (await File(javaPath).exists()) {
-      print('Project is using Java');
-      print('Updating Application.java');
-      await _replace(javaPath);
-
-      print('Creating New Directory Structure');
-      await Directory(PATH_ACTIVITY + 'java/$newPackagePath').create(recursive: true);
-      await File(javaPath).rename(newJavaPath);
-
-      print('Deleting old directories');
-      await deleteOldDirectories('java', oldPackageName!, PATH_ACTIVITY);
-    } else if (await File(kotlinPath).exists()) {
-      print('Project is using kotlin');
-      print('Updating Application.kt');
-      await _replace(kotlinPath);
-
-      print('Creating New Directory Structure');
-      await Directory(PATH_ACTIVITY + 'kotlin/$newPackagePath').create(recursive: true);
-      await File(kotlinPath).rename(newKotlinPath);
-
-      print('Deleting old directories');
-      await deleteOldDirectories('kotlin', oldPackageName!, PATH_ACTIVITY);
-    } else {
-      print('ERROR:: Unknown Directory structure, both java & kotlin files not found.');
-    }
-  }
 
   Future<void> _replace(String path) async {
     await replaceInFile(path, oldPackageName, newPackageName);
