@@ -33,7 +33,7 @@ class AndroidRenameSteps {
     var regApplication =
         RegExp('applicationId "(.*)"', caseSensitive: true, multiLine: false);
     var regLable =
-        RegExp('android:label="(.*)"', caseSensitive: true, multiLine: false);
+        RegExp('android:label="(.*?)"', caseSensitive: true, multiLine: false);
 
     var name = regApplication.firstMatch(contents!)!.group(1);
     oldPackageName = name;
