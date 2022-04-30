@@ -51,16 +51,4 @@ Future<void> changeAndroidAppName(
   }
   contents = contents.replaceAll(oldLabel, newLabel);
   await writeFileFromString(androidManifestPath, contents);
-  await modifyYaml(newLabel);
-}
-
-modifyYaml(newLabel) {
-  File file = File("pubspec.yaml");
-  final yaml = loadYaml(file.readAsStringSync());
-
-  final modifiable = getModifiableNode(yaml);
-  modifiable['name'] = newLabel;
-
-  final strYaml = toYamlString(modifiable);
-  File("pubspec.yaml").writeAsStringSync(strYaml);
 }
