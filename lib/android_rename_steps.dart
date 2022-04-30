@@ -79,7 +79,7 @@ class AndroidRenameSteps {
 
       print('Creating New Directory Structure');
       await Directory(PATH_ACTIVITY + 'kotlin/$newPackagePath').create(recursive: true);
-      await File(kotlinPathMainActivity).rename(newkotlinPathMainActivity);
+      await File(kotlinPathMainActivity).rename(newKotlinPathMainActivity);
 
       print('Deleting old directories');
       await deleteOldDirectories('kotlin', oldPackageName!, PATH_ACTIVITY);
