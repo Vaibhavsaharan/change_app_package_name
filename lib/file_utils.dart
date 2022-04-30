@@ -2,7 +2,7 @@ import 'dart:io';
 
 Future<void> replaceInFile(String path, oldPackage, newPackage) async {
   String? contents = await readFileAsString(path);
-  if(contents == null){
+  if (contents == null) {
     print('ERROR:: file at $path not found');
     return;
   }
@@ -25,7 +25,8 @@ Future<void> writeFileFromString(String path, String contents) async {
   await file.writeAsString(contents);
 }
 
-Future<void> deleteOldDirectories(String lang, String oldPackage, String basePath) async {
+Future<void> deleteOldDirectories(
+    String lang, String oldPackage, String basePath) async {
   var dirList = oldPackage.split('.');
   var reversed = dirList.reversed.toList();
 
@@ -37,4 +38,14 @@ Future<void> deleteOldDirectories(String lang, String oldPackage, String basePat
     }
     dirList.removeLast();
   }
+}
+
+Future<void> changeAndroidAppName(
+    String androidManifestPath, oldLabel, newLabel) async {
+  String? contents = await readFileAsString(androidManifestPath);
+  if (contents == null) {
+    print('ERROR:: file at $androidManifestPath not found');
+    return;
+  }
+  contents = contents.replaceAll(oldLabel, newLabel);
 }
