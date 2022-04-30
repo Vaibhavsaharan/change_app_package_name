@@ -6,3 +6,6 @@ homepage: https://github.com/atiqsamtia/change_app_package_name
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  yaml_modify: ^1.0.1
