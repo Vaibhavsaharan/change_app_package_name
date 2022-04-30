@@ -72,14 +72,14 @@ class AndroidRenameSteps {
 
       print('Deleting old directories');
       await deleteOldDirectories('java', oldPackageName!, PATH_ACTIVITY);
-    } else if (await File(kotlinPath).exists()) {
+    } else if (await File(kotlinPathMainActivity).exists()) {
       print('Project is using kotlin');
       print('Updating MainActivity.kt');
-      await _replace(kotlinPath);
+      await _replace(kotlinPathMainActivity);
 
       print('Creating New Directory Structure');
       await Directory(PATH_ACTIVITY + 'kotlin/$newPackagePath').create(recursive: true);
-      await File(kotlinPath).rename(newKotlinPath);
+      await File(kotlinPathMainActivity).rename(newkotlinPathMainActivity);
 
       print('Deleting old directories');
       await deleteOldDirectories('kotlin', oldPackageName!, PATH_ACTIVITY);
