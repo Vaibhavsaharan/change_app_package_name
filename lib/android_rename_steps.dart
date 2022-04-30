@@ -43,6 +43,7 @@ class AndroidRenameSteps {
     await _replace(PATH_MANIFEST_PROFILE);
 
     await updateMainActivity();
+    await updateApplication();
   }
 
   Future<void> updateMainActivity() async {
@@ -68,6 +69,42 @@ class AndroidRenameSteps {
     } else if (await File(kotlinPath).exists()) {
       print('Project is using kotlin');
       print('Updating MainActivity.kt');
+      await _replace(kotlinPath);
+
+      print('Creating New Directory Structure');
+      await Directory(PATH_ACTIVITY + 'kotlin/$newPackagePath').create(recursive: true);
+      await File(kotlinPath).rename(newKotlinPath);
+
+      print('Deleting old directories');
+      await deleteOldDirectories('kotlin', oldPackageName!, PATH_ACTIVITY);
+    } else {
+      print('ERROR:: Unknown Directory structure, both java & kotlin files not found.');
+    }
+  }
+
+  Future<void> updateApplication() async {
+    String oldPackagePath = oldPackageName!.replaceAll('.', '/');
+    String javaPath = PATH_ACTIVITY + 'java/$oldPackagePath/Application.java';
+    String kotlinPath = PATH_ACTIVITY + 'kotlin/$oldPackagePath/Application.kt';
+
+    String newPackagePath = newPackageName.replaceAll('.', '/');
+    String newJavaPath = PATH_ACTIVITY + 'java/$newPackagePath/Application.java';
+    String newKotlinPath = PATH_ACTIVITY + 'kotlin/$newPackagePath/Application.kt';
+
+    if (await File(javaPath).exists()) {
+      print('Project is using Java');
+      print('Updating Application.java');
+      await _replace(javaPath);
+
+      print('Creating New Directory Structure');
+      await Directory(PATH_ACTIVITY + 'java/$newPackagePath').create(recursive: true);
+      await File(javaPath).rename(newJavaPath);
+
+      print('Deleting old directories');
+      await deleteOldDirectories('java', oldPackageName!, PATH_ACTIVITY);
+    } else if (await File(kotlinPath).exists()) {
+      print('Project is using kotlin');
+      print('Updating Application.kt');
       await _replace(kotlinPath);
 
       print('Creating New Directory Structure');
