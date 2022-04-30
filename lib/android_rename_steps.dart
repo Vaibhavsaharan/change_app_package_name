@@ -58,7 +58,7 @@ class AndroidRenameSteps {
     String newJavaPathApplication = PATH_ACTIVITY + 'java/$newPackagePath/MainActivity.java';
     String newKotlinPathApplication = PATH_ACTIVITY + 'kotlin/$newPackagePath/MainActivity.kt';
 
-    if (await File(javaPath).exists()) {
+    if (await File(javaPathMainActivity).exists()) {
       print('Project is using Java');
       print('Updating MainActivity.java');
       print('Updating Applicatio.java');
