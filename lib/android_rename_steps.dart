@@ -67,9 +67,9 @@ class AndroidRenameSteps {
     String kotlinPathMainActivity =
         PATH_ACTIVITY + 'kotlin/$oldPackagePath/MainActivity.kt';
     String javaPathApplication =
-        PATH_ACTIVITY + 'java/$oldPackagePath/MainActivity.java';
+        PATH_ACTIVITY + 'java/$oldPackagePath/Application.java';
     String kotlinPathApplication =
-        PATH_ACTIVITY + 'kotlin/$oldPackagePath/MainActivity.kt';
+        PATH_ACTIVITY + 'kotlin/$oldPackagePath/Application.kt';
 
     String newPackagePath = newPackageName.replaceAll('.', '/');
     String newJavaPathMainActivity =
@@ -77,9 +77,9 @@ class AndroidRenameSteps {
     String newKotlinPathMainActivity =
         PATH_ACTIVITY + 'kotlin/$newPackagePath/MainActivity.kt';
     String newJavaPathApplication =
-        PATH_ACTIVITY + 'java/$newPackagePath/MainActivity.java';
+        PATH_ACTIVITY + 'java/$newPackagePath/Application.java';
     String newKotlinPathApplication =
-        PATH_ACTIVITY + 'kotlin/$newPackagePath/MainActivity.kt';
+        PATH_ACTIVITY + 'kotlin/$newPackagePath/Application.kt';
 
     if (await File(javaPathMainActivity).exists()) {
       print('Project is using Java');
