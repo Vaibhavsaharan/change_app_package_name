@@ -117,7 +117,9 @@ class AndroidRenameSteps {
 
   Future<void> renameApp() async {
     print('Updating app name');
-    await changeAndroidAppName(PATH_MANIFEST, oldLabel, newLabel);
+    String oldLabelString = 'android:label="$oldLabel"';
+    String newLabelString = 'android:label="$newLabel"';
+    await changeAndroidAppName(PATH_MANIFEST, oldLabelString, newLabelString);
   }
 
   Future<void> _replace(String path) async {
