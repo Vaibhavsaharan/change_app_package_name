@@ -158,7 +158,7 @@ class AndroidRenameSteps {
       'com.google.firebase:firebase-messaging'
     ];
     List<String> googleDependencies = [
-      'com.google.gms.google-services',
+      'com.google.gms:google-services',
     ];
     await readLineByLine(PATH_APP_BUILD_GRADLE, googleServices);
     await readLineByLine(PATH_BUILD_GRADLE, googleDependencies);
