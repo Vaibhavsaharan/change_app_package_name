@@ -5,29 +5,35 @@ import './file_utils.dart';
 class AndroidRenameSteps {
   final String newPackageName;
   final String newLabel;
+  final String newWebsite;
   String? oldPackageName;
   String? oldLabel;
 
-  static const String PATH_BUILD_GRADLE = 'android/app/build.gradle';
+  static const String PATH_APP_BUILD_GRADLE = 'android/app/build.gradle';
+  static const String PATH_BUILD_GRADLE = 'android/build.gradle';
   static const String PATH_MANIFEST =
       'android/app/src/main/AndroidManifest.xml';
   static const String PATH_MANIFEST_DEBUG =
       'android/app/src/debug/AndroidManifest.xml';
   static const String PATH_MANIFEST_PROFILE =
       'android/app/src/profile/AndroidManifest.xml';
+  static const String PATH_MAIN_WHITELABEL_DEV = 'lib/main_whitelabel_dev.dart';
+  static const String PATH_MAIN_WHITELABEL_PROD =
+      'lib/main_whitelabel_prod.dart';
+  static const String PATH_GLOBALS = 'lib/common/globals.dart';
 
   static const String PATH_ACTIVITY = 'android/app/src/main/';
 
-  AndroidRenameSteps(this.newPackageName, this.newLabel);
+  AndroidRenameSteps(this.newPackageName, this.newLabel, this.newWebsite);
 
   Future<void> process() async {
-    if (!await File(PATH_BUILD_GRADLE).exists()) {
+    if (!await File(PATH_APP_BUILD_GRADLE).exists()) {
       print(
           'ERROR:: build.gradle file not found, Check if you have a correct android directory present in your project'
           '\n\nrun " flutter create . " to regenerate missing files.');
       return;
     }
-    String? contents = await readFileAsString(PATH_BUILD_GRADLE);
+    String? contents = await readFileAsString(PATH_APP_BUILD_GRADLE);
     String? contentsManifest = await readFileAsString(PATH_MANIFEST);
 
     var regApplication =
@@ -45,7 +51,7 @@ class AndroidRenameSteps {
     print("Old app label $oldLabel");
 
     print('Updating build.gradle File');
-    await _replace(PATH_BUILD_GRADLE);
+    await _replace(PATH_APP_BUILD_GRADLE);
 
     print('Updating Main Manifest file');
     await _replace(PATH_MANIFEST);
@@ -59,6 +65,10 @@ class AndroidRenameSteps {
     await updateMainActivityAndApplication();
 
     await renameApp();
+
+    await removePlayServices();
+
+    await replaceWebsite();
   }
 
   Future<void> updateMainActivityAndApplication() async {
@@ -116,13 +126,45 @@ class AndroidRenameSteps {
   }
 
   Future<void> renameApp() async {
-    print('Updating app name');
-    String oldLabelString = 'android:label="$oldLabel"';
-    String newLabelString = 'android:label="$newLabel"';
-    await changeAndroidAppName(PATH_MANIFEST, oldLabelString, newLabelString);
+    String oldLabelManifestString = 'android:label="$oldLabel"';
+    String newLabelManifestString = 'android:label="$newLabel"';
+    String oldLabelMainFileString = "title: 'Web App'";
+    String newLabelMainFileString = "title: '$newLabel'";
+    print('Updating app name in manifest');
+    await changeAndroidAppName(
+        PATH_MANIFEST, oldLabelManifestString, newLabelManifestString);
+    print('Updating app name in main whitelabel dev');
+    await changeAndroidAppName(PATH_MAIN_WHITELABEL_DEV, oldLabelMainFileString,
+        newLabelMainFileString);
+    print('Updating app name in main whitelabel prod');
+    await changeAndroidAppName(PATH_MAIN_WHITELABEL_PROD,
+        oldLabelMainFileString, newLabelMainFileString);
+  }
+
+  Future<void> replaceWebsite() async {
+    String oldWebsiteSlugString = 'websiteSlug = "value";';
+    String newWebsiteSlugString = 'websiteSlug = "$newWebsite";';
+    print('replacing website slug in globals');
+    await changeWebsiteSlug(
+        PATH_GLOBALS, oldWebsiteSlugString, newWebsiteSlugString);
+  }
+
+  Future<void> removePlayServices() async {
+    List<String> googleServices = [
+      'com.google.android.gms:play-services-ads-identifier',
+      'com.google.gms.google-services',
+      'com.google.firebase:firebase-analytics',
+      'com.google.firebase:firebase-appindexing',
+      'com.google.firebase:firebase-messaging'
+    ];
+    List<String> googleDependencies = [
+      'com.google.gms.google-services',
+    ];
+    await readLineByLine(PATH_APP_BUILD_GRADLE, googleServices);
+    await readLineByLine(PATH_BUILD_GRADLE, googleDependencies);
   }
 
   Future<void> _replace(String path) async {
-    await replaceInFile(path, oldPackageName, newPackageName);
+    await changePackageName(path, oldPackageName, newPackageName);
   }
 }

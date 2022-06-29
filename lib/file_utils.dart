@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:yaml_modify/yaml_modify.dart';
-
-Future<void> replaceInFile(String path, oldPackage, newPackage) async {
+Future<void> replaceInFile(String path, oldString, newString) async {
   String? contents = await readFileAsString(path);
   if (contents == null) {
     print('ERROR:: file at $path not found');
     return;
   }
-  contents = contents.replaceAll(oldPackage, newPackage);
+  contents = contents.replaceAll(oldString, newString);
   await writeFileFromString(path, contents);
 }
 
@@ -42,13 +40,37 @@ Future<void> deleteOldDirectories(
   }
 }
 
-Future<void> changeAndroidAppName(
-    String androidManifestPath, oldLabel, newLabel) async {
-  String? contents = await readFileAsString(androidManifestPath);
-  if (contents == null) {
-    print('ERROR:: file at $androidManifestPath not found');
-    return;
+Future<void> changePackageName(String filePath, oldPackage, newPackage) async {
+  await replaceInFile(filePath, oldPackage, newPackage);
+}
+
+Future<void> changeAndroidAppName(String filePath, oldLabel, newLabel) async {
+  await replaceInFile(filePath, oldLabel, newLabel);
+}
+
+Future<void> changeWebsiteSlug(String filePath, oldWebsite, newWebsite) async {
+  await replaceInFile(filePath, oldWebsite, newWebsite);
+}
+
+Future<void> readLineByLine(String filePath, List<String> removingLines) async {
+  File data = File(filePath);
+  List<String> dataLines = await data.readAsLines();
+  String outputFileString = '';
+  for (var line in dataLines) {
+    bool foundLine = false;
+    String foundLineValue = '';
+    for (String removeLine in removingLines) {
+      String tempLine = line;
+      if (tempLine.trim().contains(removeLine)) {
+        foundLine = true;
+        foundLineValue = removeLine;
+      }
+    }
+    if (!foundLine) {
+      outputFileString = outputFileString + (outputFileString.isEmpty ? '' : '\n') +line;
+    } else {
+      print('removed $foundLineValue');
+    }
   }
-  contents = contents.replaceAll(oldLabel, newLabel);
-  await writeFileFromString(androidManifestPath, contents);
+  await writeFileFromString(filePath, outputFileString);
 }
