@@ -167,12 +167,14 @@ class AndroidRenameSteps {
     List<String> googleServices = [
       'com.google.android.gms:play-services-ads-identifier',
       'com.google.gms.google-services',
+      'com.google.firebase.crashlytics',
       'com.google.firebase:firebase-analytics',
       'com.google.firebase:firebase-appindexing',
       'com.google.firebase:firebase-messaging'
     ];
     List<String> googleDependencies = [
-      'com.google.gms.google-services',
+      'com.google.gms:google-services',
+      'com.google.firebase:firebase-crashlytics-gradle'
     ];
     await readLineByLine(PATH_APP_BUILD_GRADLE, googleServices);
     await readLineByLine(PATH_BUILD_GRADLE, googleDependencies);
