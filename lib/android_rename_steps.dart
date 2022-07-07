@@ -6,11 +6,13 @@ class AndroidRenameSteps {
   final String newPackageName;
   final String newLabel;
   final String newWebsite;
+  final String defaultKey;
   String? oldPackageName;
   String? oldLabel;
 
   static const String PATH_APP_BUILD_GRADLE = 'android/app/build.gradle';
   static const String PATH_BUILD_GRADLE = 'android/build.gradle';
+  static const String PATH_KEY_PROPERTIES = 'android/key.properties';
   static const String PATH_MANIFEST =
       'android/app/src/main/AndroidManifest.xml';
   static const String PATH_MANIFEST_DEBUG =
@@ -24,7 +26,8 @@ class AndroidRenameSteps {
 
   static const String PATH_ACTIVITY = 'android/app/src/main/';
 
-  AndroidRenameSteps(this.newPackageName, this.newLabel, this.newWebsite);
+  AndroidRenameSteps(
+      this.newPackageName, this.newLabel, this.newWebsite, this.defaultKey);
 
   Future<void> process() async {
     if (!await File(PATH_APP_BUILD_GRADLE).exists()) {
@@ -69,6 +72,8 @@ class AndroidRenameSteps {
     await removePlayServices();
 
     await replaceWebsite();
+
+    await replaceKeys();
   }
 
   Future<void> updateMainActivityAndApplication() async {
@@ -147,6 +152,15 @@ class AndroidRenameSteps {
     print('replacing website slug in globals');
     await changeWebsiteSlug(
         PATH_GLOBALS, oldWebsiteSlugString, newWebsiteSlugString);
+  }
+
+  Future<void> replaceKeys() async {
+    bool isDefaultKey = defaultKey == 'True' ? true : false;
+    if (isDefaultKey) {
+      return;
+    }
+    print('changing keys');
+    await changeKeys(PATH_KEY_PROPERTIES, newPackageName);
   }
 
   Future<void> removePlayServices() async {

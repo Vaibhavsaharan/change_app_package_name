@@ -52,6 +52,21 @@ Future<void> changeWebsiteSlug(String filePath, oldWebsite, newWebsite) async {
   await replaceInFile(filePath, oldWebsite, newWebsite);
 }
 
+Future<void> changeKeys(String filePath, String newPackageName) async {
+  File data = File(filePath);
+  List<String> dataLines = await data.readAsLines();
+  String outputFileString = '';
+  int j = 0;
+  for (var line in dataLines) {
+    int breakpoint = line.indexOf('=');
+    final newline = line.replaceRange(breakpoint, null, j==3 ? '/home/ubuntu/app/keys/' + newPackageName + 'apps.keystore' : newPackageName);
+    outputFileString =
+        outputFileString + (outputFileString.isEmpty ? '' : '\n') + newline;
+    j++;
+  }
+  await writeFileFromString(filePath, outputFileString);
+}
+
 Future<void> readLineByLine(String filePath, List<String> removingLines) async {
   File data = File(filePath);
   List<String> dataLines = await data.readAsLines();
@@ -67,7 +82,8 @@ Future<void> readLineByLine(String filePath, List<String> removingLines) async {
       }
     }
     if (!foundLine) {
-      outputFileString = outputFileString + (outputFileString.isEmpty ? '' : '\n') +line;
+      outputFileString =
+          outputFileString + (outputFileString.isEmpty ? '' : '\n') + line;
     } else {
       print('removed $foundLineValue');
     }
