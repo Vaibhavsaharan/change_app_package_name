@@ -156,11 +156,7 @@ class AndroidRenameSteps {
 
   Future<void> replaceKeys() async {
     bool isDefaultKey = defaultKey == 'True' ? true : false;
-    if (isDefaultKey) {
-      return;
-    }
-    print('changing keys');
-    await changeKeys(PATH_KEY_PROPERTIES, newPackageName);
+    await changeKeys(PATH_KEY_PROPERTIES, newPackageName, isDefaultKey);
   }
 
   Future<void> removePlayServices() async {

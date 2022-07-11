@@ -52,14 +52,30 @@ Future<void> changeWebsiteSlug(String filePath, oldWebsite, newWebsite) async {
   await replaceInFile(filePath, oldWebsite, newWebsite);
 }
 
-Future<void> changeKeys(String filePath, String newPackageName) async {
+Future<void> changeKeys(
+    String filePath, String newPackageName, bool isDefaultKey) async {
   File data = File(filePath);
   List<String> dataLines = await data.readAsLines();
   String outputFileString = '';
   int j = 0;
   for (var line in dataLines) {
     int breakpoint = line.indexOf('=');
-    final newline = line.replaceRange(breakpoint, null, j==3 ? '/home/ubuntu/app/keys/' + newPackageName + 'apps.keystore' : newPackageName);
+    final newline;
+    if (!isDefaultKey) {
+      newline = line.replaceRange(
+          breakpoint,
+          null,
+          j == 3
+              ? '/home/ubuntu/app/keys/' + newPackageName + 'apps.keystore'
+              : newPackageName);
+    } else {
+      newline = line.replaceRange(
+          breakpoint,
+          null,
+          j == 3
+              ? '/home/ubuntu/app/keys/kohbeeapps.keystore'
+              : 'kbapps');
+    }
     outputFileString =
         outputFileString + (outputFileString.isEmpty ? '' : '\n') + newline;
     j++;
