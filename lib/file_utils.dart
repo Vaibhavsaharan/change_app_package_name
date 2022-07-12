@@ -57,24 +57,21 @@ Future<void> changeKeys(
   File data = File(filePath);
   List<String> dataLines = await data.readAsLines();
   String outputFileString = '';
+  String unqiuePackage = newPackageName.split('.')[-1];
   int j = 0;
   for (var line in dataLines) {
-    int breakpoint = line.indexOf('=');
+    int breakpoint = line.indexOf('=') + 1;
     final newline;
     if (!isDefaultKey) {
       newline = line.replaceRange(
           breakpoint,
           null,
           j == 3
-              ? '/home/ubuntu/app/keys/' + newPackageName + 'apps.keystore'
-              : newPackageName);
+              ? '/home/ubuntu/app/keys/' + unqiuePackage + 'apps.keystore'
+              : unqiuePackage);
     } else {
-      newline = line.replaceRange(
-          breakpoint,
-          null,
-          j == 3
-              ? '/home/ubuntu/app/keys/kohbeeapps.keystore'
-              : 'kbapps');
+      newline = line.replaceRange(breakpoint, null,
+          j == 3 ? '/home/ubuntu/app/keys/kohbeeapps.keystore' : 'kbapps');
     }
     outputFileString =
         outputFileString + (outputFileString.isEmpty ? '' : '\n') + newline;
