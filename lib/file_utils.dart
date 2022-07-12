@@ -57,7 +57,7 @@ Future<void> changeKeys(
   File data = File(filePath);
   List<String> dataLines = await data.readAsLines();
   String outputFileString = '';
-  String unqiuePackage = newPackageName.split('.')[-1];
+  String unqiuePackage = newPackageName.split('.')[2];
   int j = 0;
   for (var line in dataLines) {
     int breakpoint = line.indexOf('=') + 1;
