@@ -5,7 +5,7 @@ import './file_utils.dart';
 class AndroidRenameSteps {
   final String newPackageName;
   final String newLabel;
-  final String newWebsite;
+  final String teacherId;
   final String defaultKey;
   String? oldPackageName;
   String? oldLabel;
@@ -27,7 +27,7 @@ class AndroidRenameSteps {
   static const String PATH_ACTIVITY = 'android/app/src/main/';
 
   AndroidRenameSteps(
-      this.newPackageName, this.newLabel, this.newWebsite, this.defaultKey);
+      this.newPackageName, this.newLabel, this.teacherId, this.defaultKey);
 
   Future<void> process() async {
     if (!await File(PATH_APP_BUILD_GRADLE).exists()) {
@@ -147,8 +147,8 @@ class AndroidRenameSteps {
   }
 
   Future<void> replaceWebsite() async {
-    String oldWebsiteSlugString = 'websiteSlug = "value";';
-    String newWebsiteSlugString = 'websiteSlug = "$newWebsite";';
+    String oldWebsiteSlugString = 'whitelabelTeacherId = "QTvuyamXm6WsoFgQ6UPzcEiSKFB2";';
+    String newWebsiteSlugString = 'whitelabelTeacherId = "$teacherId";';
     print('replacing website slug in globals');
     await changeWebsiteSlug(
         PATH_GLOBALS, oldWebsiteSlugString, newWebsiteSlugString);
