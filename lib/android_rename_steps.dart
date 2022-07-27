@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 
 import './file_utils.dart';
@@ -131,10 +133,11 @@ class AndroidRenameSteps {
   }
 
   Future<void> renameApp() async {
+    String label = newLabel.replaceAll('+', ' ');
     String oldLabelManifestString = 'android:label="$oldLabel"';
-    String newLabelManifestString = 'android:label="$newLabel"';
+    String newLabelManifestString = 'android:label="$label"';
     String oldLabelMainFileString = "title: 'Web App'";
-    String newLabelMainFileString = "title: '$newLabel'";
+    String newLabelMainFileString = "title: '$label'";
     print('Updating app name in manifest');
     await changeAndroidAppName(
         PATH_MANIFEST, oldLabelManifestString, newLabelManifestString);
@@ -147,7 +150,8 @@ class AndroidRenameSteps {
   }
 
   Future<void> replaceWebsite() async {
-    String oldWebsiteSlugString = 'whitelabelTeacherId = "QTvuyamXm6WsoFgQ6UPzcEiSKFB2";';
+    String oldWebsiteSlugString =
+        'whitelabelTeacherId = "QTvuyamXm6WsoFgQ6UPzcEiSKFB2";';
     String newWebsiteSlugString = 'whitelabelTeacherId = "$teacherId";';
     print('replacing website slug in globals');
     await changeWebsiteSlug(
