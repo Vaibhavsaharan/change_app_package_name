@@ -52,6 +52,10 @@ Future<void> changeWebsiteSlug(String filePath, oldWebsite, newWebsite) async {
   await replaceInFile(filePath, oldWebsite, newWebsite);
 }
 
+Future<void> changeScreenShotConfig(String filePath, oldConfig, newConfig) async {
+  await replaceInFile(filePath, oldConfig, newConfig);
+}
+
 Future<void> changeKeys(
     String filePath, String newPackageName, bool isDefaultKey) async {
   File data = File(filePath);

@@ -9,6 +9,7 @@ class AndroidRenameSteps {
   final String newLabel;
   final String teacherId;
   final String defaultKey;
+  final String allowSS;
   String? oldPackageName;
   String? oldLabel;
 
@@ -28,8 +29,8 @@ class AndroidRenameSteps {
 
   static const String PATH_ACTIVITY = 'android/app/src/main/';
 
-  AndroidRenameSteps(
-      this.newPackageName, this.newLabel, this.teacherId, this.defaultKey);
+  AndroidRenameSteps(this.newPackageName, this.newLabel, this.teacherId,
+      this.defaultKey, this.allowSS);
 
   Future<void> process() async {
     if (!await File(PATH_APP_BUILD_GRADLE).exists()) {
@@ -76,6 +77,8 @@ class AndroidRenameSteps {
     await replaceWebsite();
 
     await replaceKeys();
+
+    await updateConfig();
   }
 
   Future<void> updateMainActivityAndApplication() async {
@@ -156,6 +159,15 @@ class AndroidRenameSteps {
     print('replacing website slug in globals');
     await changeWebsiteSlug(
         PATH_GLOBALS, oldWebsiteSlugString, newWebsiteSlugString);
+  }
+
+  Future<void> updateConfig() async {
+    bool allowScreenShot = allowSS == 'True' ? true : false;
+    String oldConfigString = 'allowScreenShots = false;';
+    String newConfigString = 'allowScreenShots = $allowScreenShot;';
+    print('updating screenshot config');
+    await changeScreenShotConfig(
+        PATH_GLOBALS, oldConfigString, newConfigString);
   }
 
   Future<void> replaceKeys() async {
