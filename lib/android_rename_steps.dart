@@ -138,9 +138,9 @@ class AndroidRenameSteps {
   Future<void> renameApp() async {
     String label = newLabel.replaceAll('+', ' ');
     String oldLabelManifestString = 'android:label="$oldLabel"';
-    String newLabelManifestString = 'android:label="$label"';
+    String newLabelManifestString = "android:label=\"$label\"";
     String oldLabelMainFileString = "title: 'Web App'";
-    String newLabelMainFileString = 'title: "$label"';
+    String newLabelMainFileString = "title: \"$label\"";
     print('Updating app name in manifest');
     await changeAndroidAppName(
         PATH_MANIFEST, oldLabelManifestString, newLabelManifestString);
