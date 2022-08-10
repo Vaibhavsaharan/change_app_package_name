@@ -137,6 +137,7 @@ class AndroidRenameSteps {
 
   Future<void> renameApp() async {
     String label = newLabel.replaceAll('+', ' ');
+    label = label.replaceAll('^', '\'');
     String oldLabelManifestString = 'android:label="$oldLabel"';
     String newLabelManifestString = "android:label=\"$label\"";
     String oldLabelMainFileString = "title: 'Web App'";
