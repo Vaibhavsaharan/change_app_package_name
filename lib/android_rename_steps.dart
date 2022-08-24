@@ -179,9 +179,9 @@ class AndroidRenameSteps {
     if (primaryColor == 'none') {
       return;
     }
-    String oldColorString = 'var selectedColor = primaryBlue;';
+    String oldColorString = "var selectedColor = primaryBlue;";
     String newColorString =
-        'var selectedColor = HexColor.fromHex($primaryColor);';
+        "var selectedColor = HexColor.fromHex('$primaryColor');";
     print('replacing primary color in learner login page');
     await changeWebsiteSlug(PATH_WEBSITE_LOGIN, oldColorString, newColorString);
   }
