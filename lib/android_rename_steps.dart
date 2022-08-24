@@ -10,6 +10,7 @@ class AndroidRenameSteps {
   final String teacherId;
   final String defaultKey;
   final String allowSS;
+  final String primaryColor;
   String? oldPackageName;
   String? oldLabel;
 
@@ -26,11 +27,12 @@ class AndroidRenameSteps {
   static const String PATH_MAIN_WHITELABEL_PROD =
       'lib/main_whitelabel_prod.dart';
   static const String PATH_GLOBALS = 'lib/common/globals.dart';
-
+  static const String PATH_WEBSITE_LOGIN =
+      'lib/ui/teacher/website_viewer/website_login.dart';
   static const String PATH_ACTIVITY = 'android/app/src/main/';
 
   AndroidRenameSteps(this.newPackageName, this.newLabel, this.teacherId,
-      this.defaultKey, this.allowSS);
+      this.defaultKey, this.allowSS, this.primaryColor);
 
   Future<void> process() async {
     if (!await File(PATH_APP_BUILD_GRADLE).exists()) {
@@ -79,6 +81,8 @@ class AndroidRenameSteps {
     await replaceKeys();
 
     await updateConfig();
+
+    await updateColors();
   }
 
   Future<void> updateMainActivityAndApplication() async {
@@ -169,6 +173,17 @@ class AndroidRenameSteps {
     print('updating screenshot config');
     await changeScreenShotConfig(
         PATH_GLOBALS, oldConfigString, newConfigString);
+  }
+
+  Future<void> updateColors() async {
+    if (primaryColor == 'none') {
+      return;
+    }
+    String oldColorString = 'var selectedColor = primaryBlue;';
+    String newColorString =
+        'var selectedColor = HexColor.fromHex($primaryColor);';
+    print('replacing primary color in learner login page');
+    await changeWebsiteSlug(PATH_WEBSITE_LOGIN, oldColorString, newColorString);
   }
 
   Future<void> replaceKeys() async {
